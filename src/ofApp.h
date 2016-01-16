@@ -4,24 +4,21 @@
 #include "ofxOpenCv.h"
 #include "ofxCv.h"
 
-class ofApp : public ofBaseApp {
+#define BUFFER_SIZE 60
 
+class ofApp : public ofBaseApp {
+    
 public:
     void setup();
     void update();
     void draw();
-    void keyPressed(int key);
-
+    void keyPressed();
+    
     int calcAngle(cv::Point pt1, cv::Point pt2);
-
+    
     vector<cv::Vec2f> lines;
-    //vector<cv::Vec4i> lines;
-    //vector<cv::Vec3f> circles;
-
+    std::deque<int> buffer;
+    
     ofImage cannyImg;
     ofVideoGrabber cam;
-    ofxCv::ObjectFinder finder;
-
-    ofxCv::RunningBackground background;
-    ofImage thresholded;
 };
