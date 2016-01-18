@@ -13,26 +13,41 @@ void ofApp::setup() {
     
     // define the size of our buffer and prefill with 0
     buffer.assign(BUFFER_SIZE, 0);
+    
+    background.setLearningTime(2400);
+    background.setThresholdValue(50);
 }
 
 void ofApp::update() {
     cam.update();
     if(cam.isFrameNew()) {
-        Mat src, dst, gray;
+        Mat src, gray, blured, thresholded, masked, edges;
         // openframeworks image to opencv image
         src = ofxCv::toCv(cam);
         
+        // convert color to gray image
+        convertColor(src, gray, CV_BGR2GRAY);
+        
+        // Reduce noise with a kernel 3x3
+        cv::blur(gray, blured, cv::Size(3,3));
+        
+        // create background substration mask
+        background.update(blured, thresholded);
+        
+        // multiply background mask with our blured camera image
+        cv::multiply(blured, thresholded, masked);
+        
         // canny edge detection
         // http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/canny_detector/canny_detector.html
-        Canny(src, dst, 100, 300, 3);
+        Canny(masked, edges, 100, 300, 3);
         
         // find lines in image
         // http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
         // lowering angle resolutin, see here http://stackoverflow.com/questions/21121674/more-accurate-houghline-opencv
-        HoughLines(dst, lines, 1, 2*CV_PI / 180, 90);
+        HoughLines(edges, lines, 1, 2*CV_PI / 180, 85);
         
         // convert the opencv image back into an openframeworks image
-        ofxCv::toOf(dst, cannyImg);
+        ofxCv::toOf(edges, cannyImg);
     }
 }
 
@@ -162,5 +177,6 @@ int ofApp::calcAngle(cv::Point pt1, cv::Point pt2) {
     return (int) angle;
 }
 
-void ofApp::keyPressed() {
+void ofApp::keyPressed(int key) {
+    background.reset();
 }

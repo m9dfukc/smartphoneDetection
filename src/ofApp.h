@@ -7,7 +7,7 @@
 #define BUFFER_SIZE 60
 #define THRESHOLD 0.85
 #define MIN_DISTANCE 30
-#define MAX_DISTANCE 200
+#define MAX_DISTANCE 250
 
 
 class ofApp : public ofBaseApp {
@@ -16,7 +16,7 @@ public:
     void setup();
     void update();
     void draw();
-    void keyPressed();
+    void keyPressed(int key);
     
     int calcAngle(cv::Point pt1, cv::Point pt2);
     
@@ -25,4 +25,5 @@ public:
     
     ofImage cannyImg;
     ofVideoGrabber cam;
+    ofxCv::RunningBackground background;
 };
