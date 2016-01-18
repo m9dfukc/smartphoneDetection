@@ -25,7 +25,8 @@ void ofApp::update() {
         
         // find lines in image
         // http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
-        HoughLines(dst, lines, 1, CV_PI / 180, 100);
+        // lowering angle resolutin, see here http://stackoverflow.com/questions/21121674/more-accurate-houghline-opencv
+        HoughLines(dst, lines, 1, 2*CV_PI / 180, 90);
         
         ofxCv::toOf(dst, cannyImg);
         
