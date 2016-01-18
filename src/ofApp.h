@@ -5,6 +5,10 @@
 #include "ofxCv.h"
 
 #define BUFFER_SIZE 60
+#define THRESHOLD 0.85
+#define MIN_DISTANCE 30
+#define MAX_DISTANCE 200
+
 
 class ofApp : public ofBaseApp {
     
